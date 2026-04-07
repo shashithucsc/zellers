@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { motion } from "framer-motion";
 
 const floatVariants = {
@@ -41,16 +42,16 @@ export default function HeroSection() {
         className="pointer-events-none absolute inset-0 -z-10 overflow-hidden bg-[#1E0B4B]" // Deep violet/indigo base
       >
         {/* Top Right Bright Cyan Glow */}
-        <div className="absolute -top-[20%] -right-[10%] w-[600px] h-[600px] sm:w-[800px] sm:h-[800px] rounded-full bg-[#00E5FF]/35 blur-[120px] sm:blur-[160px]" />
+        <div className="absolute -top-[20%] -right-[10%] w-150 h-150 sm:w-200 sm:h-200 rounded-full bg-[#00E5FF]/35 blur-[120px] sm:blur-[160px]" />
         
         {/* Bottom Left Bright Cyan Glow */}
-        <div className="absolute -bottom-[20%] -left-[10%] w-[600px] h-[600px] sm:w-[800px] sm:h-[800px] rounded-full bg-[#00E5FF]/35 blur-[120px] sm:blur-[160px]" />
+        <div className="absolute -bottom-[20%] -left-[10%] w-150 h-150 sm:w-200 sm:h-200 rounded-full bg-[#00E5FF]/35 blur-[120px] sm:blur-[160px]" />
         
         {/* Center/Top-Left Deep Magenta Blend */}
-        <div className="absolute top-[10%] left-[20%] w-[500px] h-[500px] rounded-full bg-[#9D00FF]/30 blur-[140px]" />
+        <div className="absolute top-[10%] left-[20%] w-125 h-125 rounded-full bg-[#9D00FF]/30 blur-[140px]" />
 
         {/* Center/Bottom-Right Deep Purple Blend */}
-        <div className="absolute bottom-[20%] right-[20%] w-[500px] h-[500px] rounded-full bg-[#6A00F4]/30 blur-[140px]" />
+        <div className="absolute bottom-[20%] right-[20%] w-125 h-125 rounded-full bg-[#6A00F4]/30 blur-[140px]" />
 
         {/* Subtle Central Golden ambient glow */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-100 h-100 rounded-full bg-yellow-500/10 blur-[100px]" />
@@ -87,7 +88,7 @@ export default function HeroSection() {
         >
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-37.5 md:w-55 h-100 bg-yellow-500/20 blur-[80px] rounded-full -z-10 transition-opacity duration-700 group-hover:opacity-100 opacity-60" />
           {/* Increased container height to md:h-[680px] to push the image up natively */}
-          <div className="relative w-45 h-85 md:w-87.5 md:h-[680px] mask-[linear-gradient(to_bottom,black_50%,transparent_100%)]">
+          <div className="relative w-45 h-85 md:w-87.5 md:h-170 mask-[linear-gradient(to_bottom,black_50%,transparent_100%)]">
             <Image
               src="/avatar-4.png"
               alt="Male Avatar"
@@ -109,7 +110,7 @@ export default function HeroSection() {
           </motion.div>
 
           <motion.div custom={0.25} initial="hidden" animate="visible" variants={fadeUp} className="w-full flex justify-center py-2 sm:py-4">
-            <div className="relative w-64 sm:w-72 md:w-80 lg:w-96 aspect-[16/9]">
+            <div className="relative w-64 sm:w-72 md:w-80 lg:w-96 aspect-video">
               <Image
                 src="/Avrudu-logo.png"
                 alt="AI Avurudu with Zellers Chocolates"
@@ -128,19 +129,22 @@ export default function HeroSection() {
           </motion.p>
 
           <motion.div custom={0.55} initial="hidden" animate="visible" variants={fadeUp} className="flex flex-col sm:flex-row gap-4 sm:gap-5 items-center mt-2 sm:mt-4 w-full justify-center px-4 sm:px-0">
-            <button className="group relative overflow-hidden w-full sm:w-auto text-sm font-extrabold tracking-widest text-black bg-linear-to-r from-yellow-400 via-yellow-500 to-amber-500 rounded-full px-6 sm:px-8 py-3.5 sm:py-4 hover:scale-105 transition-all duration-300 shadow-[0_4px_20px_rgba(234,179,8,0.4)] hover:shadow-[0_6px_30px_rgba(234,179,8,0.6)] whitespace-nowrap">
+            <Link
+              href="/campaign"
+              className="group relative overflow-hidden w-full sm:w-auto text-sm font-extrabold tracking-widest text-black bg-linear-to-r from-yellow-400 via-yellow-500 to-amber-500 rounded-full px-6 sm:px-8 py-3.5 sm:py-4 hover:scale-105 transition-all duration-300 shadow-[0_4px_20px_rgba(234,179,8,0.4)] hover:shadow-[0_6px_30px_rgba(234,179,8,0.6)] whitespace-nowrap inline-flex items-center justify-center"
+            >
               <span className="relative z-10 flex flex-row items-center justify-center gap-2 drop-shadow-sm">
                 <span className="text-xl leading-none font-medium pb-0.5">+</span>
-                <span>CREATE AVATAR</span>
-                <span className="font-bold text-black/70 tracking-normal text-xs bg-black/10 px-2 py-0.5 rounded-md ml-1">
-                  සාදන්න
-                </span>
+                <span>ඔබේ Avatar සාදන්න</span>
               </span>
               <span className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 rounded-full ease-out" />
-            </button>
-            <button className="w-full sm:w-auto text-sm font-bold tracking-widest text-white border-2 border-white/30 bg-white/10 rounded-full px-6 sm:px-8 py-3.5 sm:py-4 hover:bg-white/20 hover:border-white/50 transition-all duration-300 backdrop-blur-md shadow-[0_4px_15px_rgba(0,0,0,0.1)] whitespace-nowrap">
+            </Link>
+            <Link
+              href="/vote"
+              className="w-full sm:w-auto text-sm font-bold tracking-widest text-white border-2 border-white/30 bg-white/10 rounded-full px-6 sm:px-8 py-3.5 sm:py-4 hover:bg-white/20 hover:border-white/50 transition-all duration-300 backdrop-blur-md shadow-[0_4px_15px_rgba(0,0,0,0.1)] whitespace-nowrap inline-flex items-center justify-center"
+            >
               VIEW GALLERY →
-            </button>
+            </Link>
           </motion.div>
 
           <motion.div custom={0.7} initial="hidden" animate="visible" variants={fadeUp} className="flex flex-wrap items-center justify-center gap-2 sm:gap-4 text-[10px] sm:text-xs tracking-[0.2em] sm:tracking-[0.25em] uppercase mt-4 w-full">
@@ -166,7 +170,7 @@ export default function HeroSection() {
         >
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-37.5 md:w-55 h-100 bg-purple-600/30 blur-[80px] rounded-full -z-10 transition-opacity duration-700 group-hover:opacity-100 opacity-60" />
           {/* Increased container height to md:h-[680px] */}
-          <div className="relative w-45 h-85 md:w-87.5 md:h-[680px] mask-[linear-gradient(to_bottom,black_50%,transparent_100%)]">
+          <div className="relative w-45 h-85 md:w-87.5 md:h-170 mask-[linear-gradient(to_bottom,black_50%,transparent_100%)]">
             <Image
               src="/avatar-3.png"
               alt="Female Avatar"
