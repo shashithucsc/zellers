@@ -15,7 +15,7 @@ export default function Navbar() {
       {/* Logo */}
       <Link href="/" className="flex items-center">
         <Image
-          src="/nav-logo.png"
+          src="/logo.png"
           alt="Zellers AI Avurudu"
           width={120}
           height={48}

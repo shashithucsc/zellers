@@ -292,7 +292,7 @@ export default function VotePage() {
             transition={{ duration: 0.4, delay: 0.2 }}
             className="text-xl font-bold text-yellow-400"
           >
-            ඔබේ ප්‍රිය Avatar එකට ජන්දය දෙන්න
+            ඔබේ ප්‍රියතම Avatar එකට ජන්දය දෙන්න
           </motion.p>
 
           <motion.p
@@ -384,7 +384,7 @@ export default function VotePage() {
           className="mt-20 flex flex-col items-center gap-4"
         >
           <p className="text-base font-bold text-gray-300">
-            ඔබේ Avatar සාමයි ද?
+            ඔබේ Avatar එකක් නොමතිද?
           </p>
           <Link
             href="/campaign"

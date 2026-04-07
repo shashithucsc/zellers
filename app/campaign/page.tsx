@@ -4,6 +4,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronRight, Smartphone, User, Star, Sparkles, CheckCircle2, UploadCloud, Camera, ArrowLeft } from "lucide-react";
 import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 
 // ─── Step Definitions ─────────────────────────────────────────────────────────
 const STEPS = [
@@ -528,15 +529,9 @@ export default function CampaignPage() {
             </AnimatePresence>
           </motion.div>
 
-          {/* Footer Back Link */}
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }} className="text-center mt-8">
-            <a href="/" className="text-[10px] font-bold text-gray-500 hover:text-yellow-400 tracking-[0.25em] transition-colors duration-200">
-              ← RETURN TO HOMEPAGE
-            </a>
-          </motion.div>
-          
         </div>
       </div>
+      <Footer />
     </div>
   );
 }
