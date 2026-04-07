@@ -255,8 +255,11 @@ export default function VotePage() {
       <Navbar />
       {/* Ambient glow */}
       <div aria-hidden className="pointer-events-none fixed inset-0 overflow-hidden">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-225 h-75 rounded-full bg-purple-800/15 blur-[140px]" />
-        <div className="absolute top-32 left-1/2 -translate-x-1/2 w-100 h-100 rounded-full bg-yellow-700/8 blur-[100px]" />
+        <div className="absolute -top-[10%] -right-[5%] w-150 h-150 rounded-full bg-[#00E5FF]/12 blur-[150px]" />
+        <div className="absolute -bottom-[10%] -left-[5%] w-150 h-150 rounded-full bg-[#00E5FF]/12 blur-[150px]" />
+        <div className="absolute top-[15%] left-[20%] w-125 h-125 rounded-full bg-[#9D00FF]/10 blur-[140px]" />
+        <div className="absolute bottom-[20%] right-[20%] w-125 h-125 rounded-full bg-[#6A00F4]/10 blur-[140px]" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-100 h-100 rounded-full bg-yellow-500/6 blur-[100px]" />
       </div>
 
       <div className="relative z-10 flex-1 max-w-5xl mx-auto w-full px-4 pt-28 pb-20">

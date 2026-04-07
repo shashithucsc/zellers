@@ -52,9 +52,11 @@ export default function MeetTheAvatars() {
       {/* Background glow */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 flex items-center justify-center"
+        className="pointer-events-none absolute inset-0 overflow-hidden"
       >
-        <div className="w-225 h-75 rounded-full bg-yellow-900/10 blur-[120px]" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-225 h-75 rounded-full bg-[#6A00F4]/10 blur-[120px]" />
+        <div className="absolute top-0 right-1/4 w-100 h-75 rounded-full bg-[#00E5FF]/8 blur-[120px]" />
+        <div className="absolute bottom-0 left-1/4 w-100 h-75 rounded-full bg-yellow-500/6 blur-[100px]" />
       </div>
 
       <div className="relative z-10 max-w-6xl mx-auto">

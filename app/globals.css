@@ -13,10 +13,17 @@
 }
 
 body {
-  background: linear-gradient(155deg, #1e0845 0%, #0a1060 38%, #0b30a0 68%, #0e52c5 100%);
+  /* HeroSection mesh gradient — base #1E0B4B + cyan (top-right/bottom-left) + magenta (top-left) + deep-purple (bottom-right) + gold (center) */
+  background-color: #1E0B4B;
+  background-image:
+    radial-gradient(ellipse 900px 900px at top right,    rgba(0, 229, 255, 0.20) 0%, transparent 60%),
+    radial-gradient(ellipse 900px 900px at bottom left,  rgba(0, 229, 255, 0.20) 0%, transparent 60%),
+    radial-gradient(ellipse 600px 550px at 22% 14%,      rgba(157, 0, 255, 0.16) 0%, transparent 60%),
+    radial-gradient(ellipse 600px 550px at 78% 78%,      rgba(106, 0, 244, 0.16) 0%, transparent 60%),
+    radial-gradient(ellipse 450px 450px at 50% 50%,      rgba(234, 179, 8, 0.07) 0%, transparent 60%);
   background-attachment: fixed;
   background-repeat: no-repeat;
-  background-size: cover;
+  background-size: 100% 100%;
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }

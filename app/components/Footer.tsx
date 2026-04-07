@@ -13,10 +13,12 @@ const footerLinks = [
 export default function Footer() {
   return (
     <footer className="relative bg-transparent border-t border-white/5 overflow-hidden">
-      {/* Cinematic blobs — mirrors HeroSection lighting */}
+      {/* Cinematic blobs — HeroSection palette */}
       <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-175 h-125 rounded-full bg-purple-900/40 blur-[150px]" />
-        <div className="absolute top-10 left-1/2 -translate-x-1/2 w-105 h-105 rounded-full bg-yellow-500/12 blur-[120px]" />
+        <div className="absolute top-0 left-1/4 w-150 h-100 rounded-full bg-[#9D00FF]/15 blur-[140px]" />
+        <div className="absolute top-0 right-1/4 w-150 h-100 rounded-full bg-[#00E5FF]/10 blur-[150px]" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-100 h-75 rounded-full bg-yellow-500/8 blur-[120px]" />
+        <div className="absolute bottom-0 left-1/3 w-125 h-75 rounded-full bg-[#6A00F4]/12 blur-[130px]" />
       </div>
 
       {/* ── Final CTA Block ── */}
@@ -86,7 +88,7 @@ export default function Footer() {
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.45 }}
-          className="text-xs text-gray-500 tracking-widest uppercase text-gray-300"
+          className="text-xs text-gray-300 tracking-widest uppercase"
         >
           Free to enter · Results announced April 15, 2026
         </motion.p>

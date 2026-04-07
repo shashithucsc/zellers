@@ -31,9 +31,11 @@ export default function AvuruduPrizes() {
     <section className="relative bg-transparent py-32 px-4 overflow-hidden">
       
       {/* Cinematic Background Lighting */}
-      <div aria-hidden className="pointer-events-none absolute inset-0 flex items-center justify-center -z-10">
-        <div className="absolute top-0 w-full h-full bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-yellow-900/10 via-transparent to-transparent" />
-        <div className="absolute w-[1000px] h-[600px] bg-purple-600/5 blur-[120px] rounded-full" />
+      <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden -z-10">
+        <div className="absolute -top-[10%] -right-[5%] w-125 h-125 rounded-full bg-[#00E5FF]/8 blur-[140px]" />
+        <div className="absolute -bottom-[10%] -left-[5%] w-125 h-125 rounded-full bg-[#6A00F4]/10 blur-[130px]" />
+        <div className="absolute top-1/4 left-1/4 w-100 h-100 rounded-full bg-[#9D00FF]/8 blur-[130px]" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-250 h-150 rounded-full bg-yellow-500/5 blur-[140px]" />
       </div>
 
       <div className="relative z-10 max-w-5xl mx-auto">

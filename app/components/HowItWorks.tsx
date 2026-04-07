@@ -65,9 +65,11 @@ export default function HowItWorks() {
       {/* Background glow */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 flex items-center justify-center"
+        className="pointer-events-none absolute inset-0 overflow-hidden"
       >
-        <div className="w-200 h-75 rounded-full bg-blue-900/20 blur-[120px]" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-200 h-75 rounded-full bg-[#00E5FF]/8 blur-[120px]" />
+        <div className="absolute top-0 right-0 w-100 h-100 rounded-full bg-[#9D00FF]/8 blur-[130px]" />
+        <div className="absolute bottom-0 left-1/4 w-100 h-75 rounded-full bg-yellow-500/6 blur-[100px]" />
       </div>
 
       {/* Separator line */}
