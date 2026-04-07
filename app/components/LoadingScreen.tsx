@@ -11,24 +11,13 @@ const MESSAGES = [
 ];
 
 export default function LoadingScreen() {
-  // 1. Start as TRUE so it covers the screen immediately
+  // isVisible=true on server so it renders immediately — no hydration gap
   const [isVisible, setIsVisible] = useState(true);
   const [progress, setProgress] = useState(0);
   const [msgIndex, setMsgIndex] = useState(0);
   const rafRef = useRef<number | null>(null);
-  
-  // 2. Hydration safeguard
-  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
-    setIsMounted(true);
-
-    // If they already loaded it, immediately hide it
-    if (sessionStorage.getItem("zellers_loaded")) {
-      setIsVisible(false);
-      return;
-    }
-
     const DURATION = 2800;
     const start = performance.now();
 
@@ -50,7 +39,6 @@ export default function LoadingScreen() {
         rafRef.current = requestAnimationFrame(tick);
       } else {
         setTimeout(() => {
-          sessionStorage.setItem("zellers_loaded", "1");
           setIsVisible(false);
         }, 520);
       }
@@ -62,9 +50,6 @@ export default function LoadingScreen() {
     };
   }, []);
 
-  // Prevent hydration mismatch errors by waiting for client mount
-  if (!isMounted) return null;
-
   return (
     <AnimatePresence>
       {isVisible && (
@@ -74,7 +59,7 @@ export default function LoadingScreen() {
           exit={{ opacity: 0, scale: 1.05 }}
           transition={{ duration: 0.9, ease: "easeInOut" as const }}
           // 3. FIXED: z-[9999] ensures it stays above everything in layout.tsx
-          className="fixed inset-0 z-[9999] flex items-center justify-center overflow-hidden"
+          className="fixed inset-0 z-9999 flex items-center justify-center overflow-hidden"
         >
           {/* ── Background Image ── */}
           <div className="absolute inset-0 bg-[#0A0515]">
