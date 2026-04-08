@@ -110,6 +110,15 @@ function CountdownTimer() {
   return (
     <div className="flex flex-col items-center gap-3">
       <div className="flex items-center gap-1">
+        {/* DAYS — first position */}
+        <div className="flex flex-col items-center">
+          <span className="text-3xl sm:text-4xl font-black text-yellow-400 tabular-nums w-14 text-center drop-shadow-[0_0_10px_rgba(234,179,8,0.5)]">
+            {String(days).padStart(2, "0")}
+          </span>
+          <span className="text-[9px] tracking-[0.2em] text-yellow-500 mt-0.5">DAYS</span>
+        </div>
+        {/* separator */}
+        <span className="text-2xl font-black text-gray-600 mb-4 mx-1">:</span>
         {units.map((u, i) => (
           <div key={u.label} className="flex items-center gap-1">
             <div className="flex flex-col items-center">
@@ -123,14 +132,6 @@ function CountdownTimer() {
             )}
           </div>
         ))}
-        {/* separator */}
-        <span className="text-2xl font-black text-gray-600 mb-4 mx-1">:</span>
-        <div className="flex flex-col items-center">
-          <span className="text-3xl sm:text-4xl font-black text-yellow-400 tabular-nums w-14 text-center drop-shadow-[0_0_10px_rgba(234,179,8,0.5)]">
-            {String(days).padStart(2, "0")}
-          </span>
-          <span className="text-[9px] tracking-[0.2em] text-yellow-500 mt-0.5">DAYS</span>
-        </div>
       </div>
     </div>
   );
