@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
-import { MapPin, Search, X } from "lucide-react";
+import { MapPin, Search, X, Smartphone, CheckCircle2, ShieldCheck } from "lucide-react";
 import Navbar from "../components/Navbar";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -153,6 +153,193 @@ function CountdownTimer() {
   );
 }
 
+// ─── Vote Modal ──────────────────────────────────────────────────────────────
+type VoteModalProps = {
+  avatar: Avatar | null;
+  onClose: () => void;
+  onSuccess: (id: number) => void;
+};
+
+function VoteModal({ avatar, onClose, onSuccess }: VoteModalProps) {
+  const [phase, setPhase] = useState<"phone" | "otp" | "success">("phone");
+  const [phone, setPhone] = useState("");
+  const [otp, setOtp] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  function handleSendOtp() {
+    if (phone.length < 9) return;
+    setLoading(true);
+    // TODO: call backend to send OTP
+    setTimeout(() => { setLoading(false); setPhase("otp"); }, 1200);
+  }
+
+  function handleVerify() {
+    if (otp.length < 4 || !avatar) return;
+    setLoading(true);
+    // TODO: call backend to verify OTP and cast vote
+    setTimeout(() => {
+      setLoading(false);
+      setPhase("success");
+      setTimeout(() => { onSuccess(avatar.id); onClose(); }, 1600);
+    }, 1200);
+  }
+
+  // Close on backdrop click
+  function handleBackdrop(e: React.MouseEvent<HTMLDivElement>) {
+    if (e.target === e.currentTarget) onClose();
+  }
+
+  if (!avatar) return null;
+
+  return (
+    <AnimatePresence>
+      <motion.div
+        key="vote-modal-backdrop"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.25 }}
+        className="fixed inset-0 z-200 flex items-center justify-center px-4"
+        style={{ backgroundColor: "rgba(10,5,30,0.85)", backdropFilter: "blur(8px)" }}
+        onClick={handleBackdrop}
+      >
+        <motion.div
+          key="vote-modal-card"
+          initial={{ opacity: 0, scale: 0.92, y: 24 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          exit={{ opacity: 0, scale: 0.92, y: 24 }}
+          transition={{ duration: 0.3, ease: "easeOut" }}
+          className="relative w-full max-w-sm bg-[#1a0f4e] border border-purple-500/20 rounded-3xl p-6 sm:p-8 shadow-[0_30px_80px_rgba(0,0,0,0.6)] overflow-hidden"
+        >
+          {/* Top gold accent line */}
+          <div className="absolute top-0 left-8 right-8 h-px bg-linear-to-r from-transparent via-yellow-400/60 to-transparent" />
+
+          {/* Close button */}
+          <button
+            onClick={onClose}
+            className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full bg-white/5 border border-white/10 text-gray-400 hover:text-white hover:bg-white/10 transition-all duration-200"
+            aria-label="Close"
+          >
+            <X size={14} />
+          </button>
+
+          <AnimatePresence mode="wait">
+
+            {/* ── Phase: Phone ── */}
+            {phase === "phone" && (
+              <motion.div key="phone" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} transition={{ duration: 0.25 }} className="space-y-5">
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="w-10 h-10 rounded-full bg-yellow-500/15 border border-yellow-500/30 flex items-center justify-center shrink-0">
+                    <Smartphone size={18} className="text-yellow-400" />
+                  </div>
+                  <div>
+                    <p className="text-base font-black text-gray-100 leading-tight">Verify to Vote</p>
+                    <p className="text-xs text-gray-400 mt-0.5">Voting for <span className="text-yellow-400 font-bold">{avatar.name}</span></p>
+                  </div>
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className="text-[10px] font-bold tracking-[0.25em] uppercase text-gray-400">
+                    Mobile Number <span className="text-yellow-500/70">• දුරකථන අංකය</span>
+                  </label>
+                  <div className="flex gap-2">
+                    <div className="flex items-center gap-1.5 bg-white/5 border border-white/10 rounded-xl px-3 py-3 text-sm text-gray-300 font-semibold shrink-0 select-none">
+                      <span>🇱🇰</span>
+                      <span>+94</span>
+                    </div>
+                    <input
+                      type="tel"
+                      inputMode="numeric"
+                      maxLength={10}
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value.replace(/\D/g, ""))}
+                      placeholder="7X XXX XXXX"
+                      className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-gray-200 placeholder-gray-600 outline-none focus:border-yellow-500/50 focus:bg-white/10 transition-all duration-300"
+                    />
+                  </div>
+                </div>
+
+                <button
+                  onClick={handleSendOtp}
+                  disabled={phone.length < 9 || loading}
+                  className="w-full bg-linear-to-r from-yellow-400 to-amber-500 text-black text-sm font-black tracking-widest rounded-xl py-3.5 hover:brightness-110 hover:scale-[1.01] shadow-[0_4px_15px_rgba(234,179,8,0.3)] disabled:opacity-40 disabled:scale-100 disabled:cursor-not-allowed transition-all duration-300"
+                >
+                  {loading ? "SENDING OTP…" : "SEND OTP"}
+                </button>
+
+                <p className="text-center text-[10px] text-gray-600 tracking-wide">
+                  One vote per day, per number.
+                </p>
+              </motion.div>
+            )}
+
+            {/* ── Phase: OTP ── */}
+            {phase === "otp" && (
+              <motion.div key="otp" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} transition={{ duration: 0.25 }} className="space-y-5">
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="w-10 h-10 rounded-full bg-yellow-500/15 border border-yellow-500/30 flex items-center justify-center shrink-0">
+                    <ShieldCheck size={18} className="text-yellow-400" />
+                  </div>
+                  <div>
+                    <p className="text-base font-black text-gray-100 leading-tight">Enter OTP</p>
+                    <p className="text-xs text-gray-400 mt-0.5">Sent to +94 {phone}</p>
+                  </div>
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className="text-[10px] font-bold tracking-[0.25em] uppercase text-gray-400">
+                    OTP Code <span className="text-yellow-500/70">• කේතය</span>
+                  </label>
+                  <input
+                    type="text"
+                    inputMode="numeric"
+                    maxLength={6}
+                    value={otp}
+                    onChange={(e) => setOtp(e.target.value.replace(/\D/g, ""))}
+                    placeholder="• • • • • •"
+                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3.5 text-xl text-yellow-400 placeholder-gray-600 outline-none focus:border-yellow-500/50 transition-all duration-300 tracking-[0.5em] text-center font-black"
+                  />
+                </div>
+
+                <button
+                  onClick={handleVerify}
+                  disabled={otp.length < 4 || loading}
+                  className="w-full bg-linear-to-r from-yellow-400 to-amber-500 text-black text-sm font-black tracking-widest rounded-xl py-3.5 hover:brightness-110 hover:scale-[1.01] shadow-[0_4px_15px_rgba(234,179,8,0.3)] disabled:opacity-40 disabled:scale-100 disabled:cursor-not-allowed transition-all duration-300"
+                >
+                  {loading ? "VERIFYING…" : "VERIFY & VOTE"}
+                </button>
+
+                <button
+                  onClick={() => { setPhase("phone"); setOtp(""); }}
+                  className="w-full text-[11px] font-bold tracking-widest text-gray-500 hover:text-yellow-400 transition-colors duration-200 text-center"
+                >
+                  ← Change number
+                </button>
+              </motion.div>
+            )}
+
+            {/* ── Phase: Success ── */}
+            {phase === "success" && (
+              <motion.div key="success" initial={{ opacity: 0, scale: 0.85 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.4, ease: "easeOut" }} className="flex flex-col items-center gap-4 py-6 text-center">
+                <motion.div
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={{ type: "spring", stiffness: 260, damping: 18, delay: 0.1 }}
+                >
+                  <CheckCircle2 size={56} className="text-yellow-400" strokeWidth={1.5} />
+                </motion.div>
+                <p className="text-xl font-black text-transparent bg-clip-text bg-linear-to-r from-yellow-300 to-amber-500">Vote Cast!</p>
+                <p className="text-sm text-gray-400">Thanks for voting for <span className="text-yellow-400 font-bold">{avatar.name}</span>!</p>
+              </motion.div>
+            )}
+
+          </AnimatePresence>
+        </motion.div>
+      </motion.div>
+    </AnimatePresence>
+  );
+}
+
 // ─── Filter Tabs ──────────────────────────────────────────────────────────────
 const FILTERS: { key: Filter; label: string; dot?: string }[] = [
   { key: "all",      label: "All" },
@@ -161,7 +348,6 @@ const FILTERS: { key: Filter; label: string; dot?: string }[] = [
   { key: "top",      label: "Top Voted",dot: "bg-yellow-400"},
 ];
 
-// ─── Avatar Card ──────────────────────────────────────────────────────────────
 function AvatarCard({ avatar, voted, onVote }: { avatar: Avatar; voted: boolean; onVote: () => void }) {
   return (
     <motion.div
@@ -236,12 +422,13 @@ function AvatarCard({ avatar, voted, onVote }: { avatar: Avatar; voted: boolean;
 const PAGE_SIZE = 8; // Increased slightly for better grid fill
 
 export default function VotePage() {
-  const [filter, setFilter]     = useState<Filter>("all");
-  const [page, setPage]         = useState(1);
-  const [voted, setVoted]       = useState<Set<number>>(new Set());
-  const [query, setQuery]       = useState("");
+  const [filter, setFilter]       = useState<Filter>("all");
+  const [page, setPage]           = useState(1);
+  const [voted, setVoted]         = useState<Set<number>>(new Set());
+  const [query, setQuery]         = useState("");
+  const [voteTarget, setVoteTarget] = useState<Avatar | null>(null);
 
-  function handleVote(id: number) {
+  function handleVoteSuccess(id: number) {
     setVoted((prev) => new Set(prev).add(id));
   }
 
@@ -431,7 +618,7 @@ export default function VotePage() {
                 key={avatar.id}
                 avatar={avatar}
                 voted={voted.has(avatar.id)}
-                onVote={() => handleVote(avatar.id)}
+                onVote={() => setVoteTarget(avatar)}
               />
             ))}
           </AnimatePresence>
@@ -504,7 +691,14 @@ export default function VotePage() {
 
       </div>
 
-      {/* ── Footer ──────────────────────────────────────────────────────────── */}
+      {/* ── Vote Modal ──────────────────────────────────────────────────────── */}
+      <VoteModal
+        avatar={voteTarget}
+        onClose={() => setVoteTarget(null)}
+        onSuccess={handleVoteSuccess}
+      />
+
+      {/* ── Footer ───────────────────────────────────────────────────────────── */}
       <footer className="relative z-10 bg-transparent border-t border-white/10 py-12 mt-auto">
         <div className="relative z-10 max-w-6xl mx-auto px-4 flex flex-col items-center gap-6">
           {/* Logo */}
