@@ -101,7 +101,23 @@ function useCountdown(target: Date) {
 
 // ─── Countdown display ────────────────────────────────────────────────────────
 function CountdownTimer() {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
   const { days, hours, minutes, seconds } = useCountdown(TARGET_DATE);
+
+  if (!mounted) return (
+    <div className="flex items-center gap-1 justify-center">
+      {["DAYS", "HOURS", "MINUTES", "SECONDS"].map((label, i) => (
+        <div key={label} className="flex items-center gap-1">
+          <div className="flex flex-col items-center">
+            <span className="text-3xl sm:text-4xl font-black tabular-nums w-14 text-center text-gray-100">00</span>
+            <span className="text-[9px] tracking-[0.2em] text-gray-400 mt-0.5">{label}</span>
+          </div>
+          {i < 3 && <span className="text-2xl font-black text-gray-600 mb-4 mx-0.5">:</span>}
+        </div>
+      ))}
+    </div>
+  );
   const units = [
     { label: "HOURS",   value: hours },
     { label: "MINUTES", value: minutes },
@@ -221,7 +237,7 @@ const PAGE_SIZE = 8; // Increased slightly for better grid fill
 
 export default function VotePage() {
   const [filter, setFilter]     = useState<Filter>("all");
-  const [shown, setShown]       = useState(PAGE_SIZE);
+  const [page, setPage]         = useState(1);
   const [voted, setVoted]       = useState<Set<number>>(new Set());
   const [query, setQuery]       = useState("");
 
@@ -243,8 +259,9 @@ export default function VotePage() {
     );
   });
 
-  const visible = filtered.slice(0, shown);
-  const hasMore = shown < filtered.length;
+  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  const safePage = Math.min(page, totalPages);
+  const visible = filtered.slice((safePage - 1) * PAGE_SIZE, safePage * PAGE_SIZE);
 
   const cardVariants = {
     hidden: {},
@@ -343,7 +360,7 @@ export default function VotePage() {
           {FILTERS.map((f) => (
             <button
               key={f.key}
-              onClick={() => { setFilter(f.key); setShown(PAGE_SIZE); }}
+              onClick={() => { setFilter(f.key); setPage(1); }}
               className={[
                 "inline-flex items-center gap-2 text-xs font-bold tracking-widest uppercase rounded-full px-5 py-2.5 border transition-all duration-300",
                 filter === f.key
@@ -372,7 +389,7 @@ export default function VotePage() {
             <input
               type="text"
               value={query}
-              onChange={(e) => { setQuery(e.target.value); setShown(PAGE_SIZE); }}
+              onChange={(e) => { setQuery(e.target.value); setPage(1); }}
               placeholder="Search by name, flavor, badge…"
               className="w-full bg-white/5 border border-white/10 backdrop-blur-md rounded-full pl-12 pr-12 py-3.5 text-sm text-white placeholder-white/40 tracking-wide focus:outline-none focus:border-yellow-400/50 focus:bg-white/10 focus:ring-4 focus:ring-yellow-400/10 transition-all duration-300"
             />
@@ -383,7 +400,7 @@ export default function VotePage() {
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.7 }}
                   transition={{ duration: 0.15 }}
-                  onClick={() => { setQuery(""); setShown(PAGE_SIZE); }}
+                  onClick={() => { setQuery(""); setPage(1); }}
                   className="absolute right-4 text-white/40 hover:text-white transition-colors duration-150 bg-white/10 rounded-full p-1"
                   aria-label="Clear search"
                 >
@@ -420,20 +437,49 @@ export default function VotePage() {
           </AnimatePresence>
         </motion.div>
 
-        {/* Load more */}
+        {/* Pagination */}
         <div className="mt-16 flex flex-col items-center gap-4">
-          {hasMore && (
-            <motion.button
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              onClick={() => setShown((s) => s + PAGE_SIZE)}
-              className="text-xs font-bold tracking-widest text-white border-2 border-white/20 bg-white/5 backdrop-blur-md rounded-full px-10 py-4 hover:bg-white/10 hover:border-white/40 transition-all duration-300 uppercase"
-            >
-              Load More Avatars
-            </motion.button>
+          {totalPages > 1 && (
+            <div className="flex items-center gap-2">
+              {/* Prev */}
+              <button
+                onClick={() => setPage((p) => Math.max(1, p - 1))}
+                disabled={safePage === 1}
+                className="w-10 h-10 flex items-center justify-center rounded-full border border-white/20 bg-white/5 text-white text-sm font-bold hover:bg-white/10 hover:border-white/40 disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-200"
+                aria-label="Previous page"
+              >
+                ‹
+              </button>
+
+              {/* Page numbers */}
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
+                <button
+                  key={p}
+                  onClick={() => setPage(p)}
+                  className={[
+                    "w-10 h-10 flex items-center justify-center rounded-full text-xs font-extrabold tracking-widest border transition-all duration-200",
+                    p === safePage
+                      ? "bg-yellow-500/20 border-yellow-400/50 text-yellow-400 shadow-[0_0_12px_rgba(234,179,8,0.25)]"
+                      : "border-white/15 bg-white/5 text-gray-300 hover:bg-white/10 hover:border-white/30 hover:text-white",
+                  ].join(" ")}
+                >
+                  {p}
+                </button>
+              ))}
+
+              {/* Next */}
+              <button
+                onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                disabled={safePage === totalPages}
+                className="w-10 h-10 flex items-center justify-center rounded-full border border-white/20 bg-white/5 text-white text-sm font-bold hover:bg-white/10 hover:border-white/40 disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-200"
+                aria-label="Next page"
+              >
+                ›
+              </button>
+            </div>
           )}
           <p className="text-[11px] font-bold text-white/30 tracking-widest uppercase">
-            Showing {visible.length} of {filtered.length} entries
+            Page {safePage} of {totalPages} · {filtered.length} entries
           </p>
         </div>
 
