@@ -15,12 +15,10 @@ export default function LoadingScreen() {
   const [progress, setProgress] = useState(0);
   const [msgIndex, setMsgIndex] = useState(0);
   const rafRef = useRef<number | null>(null);
-
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
     setIsMounted(true);
-
     if (sessionStorage.getItem("zellers_loaded")) {
       setIsVisible(false);
       return;
@@ -32,10 +30,7 @@ export default function LoadingScreen() {
     const tick = (now: number) => {
       const elapsed = now - start;
       const raw = Math.min(elapsed / DURATION, 1);
-      const eased =
-        raw < 0.5
-          ? 2 * raw * raw
-          : 1 - Math.pow(-2 * raw + 2, 2) / 2;
+      const eased = raw < 0.5 ? 2 * raw * raw : 1 - Math.pow(-2 * raw + 2, 2) / 2;
       const p = Math.round(eased * 100);
 
       setProgress(p);
@@ -66,246 +61,123 @@ export default function LoadingScreen() {
         <motion.div
           key="loading-screen"
           initial={{ opacity: 1 }}
-          exit={{ opacity: 0, scale: 1.05 }}
-          transition={{ duration: 0.9, ease: "easeInOut" as const }}
-          className="fixed inset-0 z-[9999] flex items-center justify-center overflow-hidden"
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.8, ease: "easeInOut" }}
+          className="fixed inset-0 z-[9999] flex items-center justify-center overflow-hidden bg-[#0A0515]"
         >
-          {/* ── EXPERT UI: AMBIENT PILLARBOX BACKGROUND ── */}
-          <div className="absolute inset-0 bg-[#0A0515] overflow-hidden">
-            {/* 1. Ambient Blurred Backdrop (Fills the empty sides on desktop) */}
+          {/* ── MOBILE BACKGROUND: Original Portrait Image ── */}
+          <div className="md:hidden absolute inset-0">
             <Image
               src="/loading.jpeg"
               alt=""
               fill
-              className="object-cover opacity-30 blur-[80px] scale-110"
+              className="object-cover opacity-80"
               priority
-              aria-hidden
             />
-
-            {/* 2. Main Portrait Image (Cover on mobile, Contain on desktop) */}
-            <Image
-              src="/loading.jpeg"
-              alt=""
-              fill
-              className="object-cover md:object-contain opacity-80 md:opacity-95"
-              priority
-              aria-hidden
-            />
-
-            {/* 3. Seamless Blending Gradients (Fades the edges into the dark theme) */}
-            <div className="absolute inset-0 bg-gradient-to-b from-[#0A0515]/40 via-transparent to-[#0A0515] pointer-events-none" aria-hidden />
-            <div className="hidden md:block absolute inset-0 bg-gradient-to-r from-[#0A0515] via-transparent to-[#0A0515] opacity-80 pointer-events-none" aria-hidden />
+            <div className="absolute inset-0 bg-gradient-to-b from-[#0A0515]/60 via-transparent to-[#0A0515]" />
           </div>
 
-          {/* ── Subtle dark veil for overlay text contrast ── */}
-          <div className="absolute inset-0 bg-black/30 pointer-events-none" aria-hidden />
+          {/* ── WEB BACKGROUND: Cinematic Mesh Gradient (No Portrait Image) ── */}
+          <div className="hidden md:block absolute inset-0 bg-[#1E0B4B] overflow-hidden">
+            {/* Mesh Glows */}
+            <div className="absolute -top-[10%] -right-[5%] w-[60vw] h-[60vw] rounded-full bg-[#00E5FF]/20 blur-[140px]" />
+            <div className="absolute -bottom-[10%] -left-[5%] w-[50vw] h-[50vw] rounded-full bg-[#9D00FF]/20 blur-[140px]" />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[40vw] h-[40vw] rounded-full bg-[#00E5FF]/10 blur-[120px]" />
+            
+            {/* Mandala Patterns (Subtle texture for depth) */}
+            <div className="absolute -top-20 -left-20 w-96 h-96 opacity-[0.05] invert rotate-12">
+               <Image src="/loading.jpeg" alt="" fill className="object-contain blur-[2px]" />
+            </div>
+            <div className="absolute -bottom-20 -right-20 w-96 h-96 opacity-[0.05] invert -rotate-12">
+               <Image src="/loading.jpeg" alt="" fill className="object-contain blur-[2px]" />
+            </div>
 
-          {/* ── Hero-matching cinematic glow blobs ── */}
-          <div aria-hidden className="pointer-events-none absolute inset-0">
-            <motion.div
-              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 rounded-full bg-purple-900/35 blur-[110px]"
-              animate={{ scale: [1, 1.18, 1], opacity: [0.4, 0.75, 0.4] }}
-              transition={{
-                duration: 4,
-                repeat: Infinity,
-                ease: "easeInOut" as const,
-              }}
-            />
-            <motion.div
-              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-72 h-72 rounded-full bg-yellow-400/20 blur-[90px]"
-              animate={{ scale: [1.1, 0.88, 1.1], opacity: [0.25, 0.55, 0.25] }}
-              transition={{
-                duration: 3.2,
-                repeat: Infinity,
-                ease: "easeInOut" as const,
-                delay: 0.6,
-              }}
-            />
+            <div className="absolute inset-0 opacity-[0.04] mix-blend-overlay bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" />
           </div>
 
-          {/* ── Diagonal shimmer sweep ── */}
-          <div
-            aria-hidden
-            className="pointer-events-none absolute inset-0 overflow-hidden"
-          >
+          {/* ── CENTRAL CONTENT ── */}
+          <div className="relative z-20 flex flex-col items-center">
+            
+            {/* Top Badge */}
             <motion.div
-              className="absolute inset-y-0 w-1/2"
-              style={{
-                background:
-                  "linear-gradient(90deg, transparent, rgba(255,220,100,0.08), transparent)",
-              }}
-              animate={{ x: ["-50vw", "160vw"] }}
-              transition={{
-                duration: 2.6,
-                repeat: Infinity,
-                repeatDelay: 1.8,
-                ease: "easeInOut" as const,
-              }}
-            />
-          </div>
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="mb-8 px-5 py-1.5 rounded-full border border-yellow-400/30 bg-yellow-400/5 backdrop-blur-md"
+            >
+              <span className="text-[10px] font-black tracking-[0.4em] uppercase text-yellow-400">
+                ✦ Avurudu 2026 ✦
+              </span>
+            </motion.div>
 
-          {/* ── Floating gold & white sparkle particles ── */}
-          {[...Array(30)].map((_, i) => (
-            <motion.span
-              key={i}
-              aria-hidden
-              className="pointer-events-none absolute rounded-full"
-              style={{
-                width: `${(i % 3) + 1}px`,
-                height: `${(i % 3) + 1}px`,
-                backgroundColor:
-                  i % 6 === 0
-                    ? "rgba(255,255,255,0.8)"
-                    : "rgba(253,224,71,0.85)",
-                top: `${8 + ((i * 71) % 84)}%`,
-                left: `${5 + ((i * 53) % 90)}%`,
-                boxShadow: `0 0 ${4 + (i % 4) * 2}px rgba(253,224,71,0.8)`,
-              }}
-              animate={{
-                y: [0, -(18 + (i % 3) * 9), 0],
-                opacity: [0, 0.95, 0],
-                scale: [0.4, 1.5, 0.4],
-              }}
-              transition={{
-                duration: 2.0 + (i % 5) * 0.35,
-                repeat: Infinity,
-                delay: (i * 0.13) % 2.8,
-                ease: "easeInOut" as const,
-              }}
-            />
-          ))}
-
-          {/* ── Decorative gold orbital rings centered on logo area ── */}
-          <div
-            aria-hidden
-            className="pointer-events-none absolute inset-0 flex items-center justify-center"
-            style={{ paddingTop: "70px" }}
-          >
-            {[310, 228, 152].map((size, i) => (
-              <motion.div
-                key={i}
-                className="absolute rounded-full"
-                style={{
-                  width: size,
-                  height: size,
-                  border: `1px ${i === 1 ? "dashed" : "solid"} rgba(234,179,8,${
-                    0.07 + i * 0.07
-                  })`,
-                }}
-                animate={{
-                  rotate: i % 2 === 0 ? 360 : -360,
-                  scale: [1, 1.03, 1],
-                }}
-                transition={{
-                  rotate: {
-                    duration: 32 - i * 7,
-                    repeat: Infinity,
-                    ease: "linear",
-                  },
-                  scale: {
-                    duration: 5 + i,
-                    repeat: Infinity,
-                    ease: "easeInOut" as const,
-                  },
-                }}
+            {/* Logo: Refined and Pulsing */}
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: [0.9, 1, 0.95], opacity: 1 }}
+              transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+              className="relative w-48 h-32 md:w-64 md:h-40 mb-10"
+            >
+              <Image
+                src="/Avrudu-logo.png"
+                alt="Logo"
+                fill
+                className="object-contain drop-shadow-[0_0_30px_rgba(234,179,8,0.3)]"
+                priority
               />
-            ))}
+            </motion.div>
 
-            {/* Subtle pulsing inner glow dot at logo center */}
-            <motion.div
-              className="absolute w-3 h-3 rounded-full bg-yellow-300/60"
-              style={{
-                boxShadow:
-                  "0 0 16px rgba(253,224,71,0.9), 0 0 32px rgba(253,224,71,0.4)",
-              }}
-              animate={{ scale: [1, 1.8, 1], opacity: [0.5, 1, 0.5] }}
-              transition={{
-                duration: 2,
-                repeat: Infinity,
-                ease: "easeInOut" as const,
-              }}
-            />
-          </div>
+            {/* Progress UI */}
+            <div className="flex flex-col items-center gap-4 w-64">
+              <AnimatePresence mode="wait">
+                <motion.p
+                  key={msgIndex}
+                  initial={{ opacity: 0, y: 5 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -5 }}
+                  className="text-[10px] font-bold tracking-[0.2em] uppercase text-white/50 text-center"
+                >
+                  {MESSAGES[msgIndex]}
+                </motion.p>
+              </AnimatePresence>
 
-          {/* ── Top badge pill ── */}
-          <motion.div
-            className="absolute top-10 left-1/2 -translate-x-1/2 flex items-center gap-2 px-5 py-2 rounded-full border border-yellow-400/35 bg-yellow-400/10 backdrop-blur-md"
-            initial={{ opacity: 0, y: -14 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.65, delay: 0.15, ease: "easeOut" as const }}
-          >
-            <span className="text-yellow-400 text-[10px]">✦</span>
-            <span className="text-[10px] font-black tracking-[0.38em] uppercase text-yellow-300">
-              Avurudu 2026
-            </span>
-            <span className="text-yellow-400 text-[10px]">✦</span>
-          </motion.div>
-
-          {/* ── Bottom progress section ── */}
-          <motion.div
-            className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 w-60"
-            initial={{ opacity: 0, y: 14 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.65, delay: 0.35, ease: "easeOut" as const }}
-          >
-            {/* Rotating message */}
-            <AnimatePresence mode="wait">
-              <motion.p
-                key={msgIndex}
-                initial={{ opacity: 0, y: 5 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -5 }}
-                transition={{ duration: 0.3 }}
-                className="text-[10px] font-bold tracking-[0.22em] uppercase text-white/70 text-center drop-shadow-md"
-              >
-                {MESSAGES[msgIndex]}
-              </motion.p>
-            </AnimatePresence>
-
-            {/* Progress track (outer wrapper for glow dot overflow) */}
-            <div className="relative w-full py-1.5">
-              {/* Track */}
-              <div className="h-0.5 bg-white/10 rounded-full overflow-hidden">
+              {/* Minimalist Gold Track */}
+              <div className="relative w-full h-[2px] bg-white/10 rounded-full overflow-hidden">
                 <motion.div
-                  className="h-full rounded-full"
-                  style={{
-                    background:
-                      "linear-gradient(90deg, #b45309, #f59e0b, #fde68a)",
-                    width: `${progress}%`,
-                  }}
-                  transition={{ duration: 0.08 }}
+                  className="absolute inset-y-0 left-0 bg-gradient-to-r from-yellow-600 via-yellow-400 to-yellow-200"
+                  style={{ width: `${progress}%` }}
                 />
               </div>
 
-              {/* Glowing tip dot — outside overflow-hidden track */}
-              {progress > 1 && progress < 100 && (
-                <div
-                  className="absolute top-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-yellow-300"
-                  style={{
-                    left: `calc(${progress}% - 6px)`,
-                    boxShadow:
-                      "0 0 10px rgba(253,224,71,1), 0 0 22px rgba(253,224,71,0.6)",
-                    transition: "left 0.08s linear",
-                  }}
-                />
-              )}
-
-              {/* Burst flash at 100% */}
-              {progress === 100 && (
-                <motion.div
-                  className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-yellow-300"
-                  initial={{ scale: 0.5, opacity: 1 }}
-                  animate={{ scale: 3, opacity: 0 }}
-                  transition={{ duration: 0.5, ease: "easeOut" as const }}
-                />
-              )}
+              {/* Percentage */}
+              <div className="flex items-baseline gap-1">
+                <span className="text-lg font-black text-white tabular-nums">{progress}</span>
+                <span className="text-[10px] font-bold text-yellow-500/80">%</span>
+              </div>
             </div>
+          </div>
 
-            {/* Percentage counter */}
-            <p className="text-[9px] font-black tracking-widest text-white/50 tabular-nums">
-              {String(progress).padStart(3, "\u2007")}%
-            </p>
-          </motion.div>
+          {/* Sparkle Particles (Web Only) */}
+          <div className="hidden md:block absolute inset-0 pointer-events-none">
+            {[...Array(15)].map((_, i) => (
+              <motion.div
+                key={i}
+                className="absolute w-1 h-1 bg-yellow-400 rounded-full"
+                initial={{ 
+                  x: Math.random() * 100 + "vw", 
+                  y: Math.random() * 100 + "vh", 
+                  opacity: 0 
+                }}
+                animate={{ 
+                  y: ["0vh", "-10vh"],
+                  opacity: [0, 1, 0] 
+                }}
+                transition={{ 
+                  duration: 2 + Math.random() * 2, 
+                  repeat: Infinity, 
+                  delay: Math.random() * 2 
+                }}
+              />
+            ))}
+          </div>
         </motion.div>
       )}
     </AnimatePresence>
