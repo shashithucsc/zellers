@@ -106,14 +106,14 @@ function CountdownTimer() {
   const { days, hours, minutes, seconds } = useCountdown(TARGET_DATE);
 
   if (!mounted) return (
-    <div className="flex items-center gap-1 justify-center">
+    <div className="flex items-center gap-0.5 sm:gap-1 justify-center">
       {["DAYS", "HOURS", "MINUTES", "SECONDS"].map((label, i) => (
-        <div key={label} className="flex items-center gap-1">
+        <div key={label} className="flex items-center gap-0.5 sm:gap-1">
           <div className="flex flex-col items-center">
-            <span className="text-3xl sm:text-4xl font-black tabular-nums w-14 text-center text-gray-100">00</span>
-            <span className="text-[9px] tracking-[0.2em] text-gray-400 mt-0.5">{label}</span>
+            <span className="text-2xl sm:text-3xl md:text-4xl font-black tabular-nums w-10 sm:w-14 text-center text-gray-100">00</span>
+            <span className="text-[8px] sm:text-[9px] tracking-[0.15em] sm:tracking-[0.2em] text-gray-400 mt-0.5">{label}</span>
           </div>
-          {i < 3 && <span className="text-2xl font-black text-gray-600 mb-4 mx-0.5">:</span>}
+          {i < 3 && <span className="text-xl sm:text-2xl font-black text-gray-600 mb-4 mx-0.5">:</span>}
         </div>
       ))}
     </div>
@@ -125,26 +125,26 @@ function CountdownTimer() {
   ];
   return (
     <div className="flex flex-col items-center gap-3">
-      <div className="flex items-center gap-1">
+      <div className="flex items-center gap-0.5 sm:gap-1">
         {/* DAYS — first position */}
         <div className="flex flex-col items-center">
-          <span className="text-3xl sm:text-4xl font-black text-yellow-400 tabular-nums w-14 text-center drop-shadow-[0_0_10px_rgba(234,179,8,0.5)]">
+          <span className="text-2xl sm:text-3xl md:text-4xl font-black text-yellow-400 tabular-nums w-10 sm:w-14 text-center drop-shadow-[0_0_10px_rgba(234,179,8,0.5)]">
             {String(days).padStart(2, "0")}
           </span>
-          <span className="text-[9px] tracking-[0.2em] text-yellow-500 mt-0.5">DAYS</span>
+          <span className="text-[8px] sm:text-[9px] tracking-[0.15em] sm:tracking-[0.2em] text-yellow-500 mt-0.5">DAYS</span>
         </div>
         {/* separator */}
-        <span className="text-2xl font-black text-gray-600 mb-4 mx-1">:</span>
+        <span className="text-xl sm:text-2xl font-black text-gray-600 mb-4 mx-0.5">:</span>
         {units.map((u, i) => (
-          <div key={u.label} className="flex items-center gap-1">
+          <div key={u.label} className="flex items-center gap-0.5 sm:gap-1">
             <div className="flex flex-col items-center">
-              <span className="text-3xl sm:text-4xl font-black text-gray-100 tabular-nums w-14 text-center drop-shadow-md">
+              <span className="text-2xl sm:text-3xl md:text-4xl font-black text-gray-100 tabular-nums w-10 sm:w-14 text-center drop-shadow-md">
                 {String(u.value).padStart(2, "0")}
               </span>
-              <span className="text-[9px] tracking-[0.2em] text-gray-400 mt-0.5">{u.label}</span>
+              <span className="text-[8px] sm:text-[9px] tracking-[0.15em] sm:tracking-[0.2em] text-gray-400 mt-0.5">{u.label}</span>
             </div>
             {i < units.length - 1 && (
-              <span className="text-2xl font-black text-gray-600 mb-4 mx-0.5">:</span>
+              <span className="text-xl sm:text-2xl font-black text-gray-600 mb-4 mx-0.5">:</span>
             )}
           </div>
         ))}
@@ -345,7 +345,7 @@ export default function VotePage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.35 }}
-          className="bg-white/5 backdrop-blur-md border border-white/10 rounded-[2rem] px-8 py-8 mb-12 max-w-md mx-auto text-center shadow-2xl"
+          className="bg-white/5 backdrop-blur-md border border-white/10 rounded-[2rem] px-4 sm:px-8 py-8 mb-12 max-w-md mx-auto text-center shadow-2xl"
         >
           <CountdownTimer />
         </motion.div>
@@ -440,7 +440,7 @@ export default function VotePage() {
         {/* Pagination */}
         <div className="mt-16 flex flex-col items-center gap-4">
           {totalPages > 1 && (
-            <div className="flex items-center gap-2">
+            <div className="flex items-center justify-center gap-2 flex-wrap">
               {/* Prev */}
               <button
                 onClick={() => setPage((p) => Math.max(1, p - 1))}
