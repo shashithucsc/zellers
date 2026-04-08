@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronRight, Smartphone, User, Star, Sparkles, CheckCircle2, UploadCloud, Camera, ArrowLeft } from "lucide-react";
+import { ChevronRight, Smartphone, User, Star, Sparkles, CheckCircle2, Camera, ArrowLeft } from "lucide-react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 
@@ -91,7 +91,7 @@ function StepIndicator({ current }: { current: number }) {
               </div>
               <span
                 className={`absolute -bottom-5 text-[8px] sm:text-[9px] font-bold tracking-[0.2em] transition-colors duration-300 ${
-                  active ? "text-yellow-400" : done ? "text-yellow-500/70" : "text-gray-600"
+                  active ? "text-yellow-400" : done ? "text-yellow-500/70" : "text-gray-500"
                 }`}
               >
                 {step.label}
@@ -100,7 +100,7 @@ function StepIndicator({ current }: { current: number }) {
             {idx < STEPS.length - 1 && (
               <div
                 className={`h-0.5 flex-1 mx-2 sm:mx-3 rounded-full transition-all duration-500 ${
-                  done ? "bg-linear-to-r from-yellow-400 to-yellow-600 shadow-[0_0_10px_rgba(234,179,8,0.5)]" : "bg-white/10"
+                  done ? "bg-gradient-to-r from-yellow-400 to-yellow-600 shadow-[0_0_10px_rgba(234,179,8,0.5)]" : "bg-white/10"
                 }`}
               />
             )}
@@ -136,7 +136,7 @@ function StepVerify({ onNext }: { onNext: () => void }) {
           MOBILE NUMBER <span className="text-yellow-500/70">• දුරකථන අංකය</span>
         </label>
         <div className="flex gap-2">
-          <div className="flex items-center gap-1.5 bg-white/5 border border-white/10 rounded-xl px-4 py-3.5 text-sm text-gray-300 font-semibold shrink-0 select-none">
+          <div className="flex items-center gap-1.5 bg-white/5 border border-white/10 rounded-xl px-4 py-3.5 text-sm text-gray-300 font-semibold shrink-0 select-none backdrop-blur-md">
             <span className="text-base">🇱🇰</span>
             <span>+94</span>
           </div>
@@ -147,7 +147,7 @@ function StepVerify({ onNext }: { onNext: () => void }) {
             value={phone}
             onChange={(e) => setPhone(e.target.value.replace(/\D/g, ""))}
             placeholder="7X XXX XXXX"
-            className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3.5 text-base text-gray-200 placeholder-gray-600 outline-none focus:border-yellow-500/50 focus:bg-white/10 focus:shadow-[0_0_15px_rgba(234,179,8,0.1)] transition-all duration-300"
+            className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3.5 text-base text-gray-200 placeholder-gray-500 outline-none focus:border-yellow-500/50 focus:bg-white/10 focus:shadow-[0_0_15px_rgba(234,179,8,0.1)] transition-all duration-300 backdrop-blur-md"
           />
         </div>
       </div>
@@ -170,7 +170,7 @@ function StepVerify({ onNext }: { onNext: () => void }) {
               value={otp}
               onChange={(e) => setOtp(e.target.value.replace(/\D/g, ""))}
               placeholder="• • • • • •"
-              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3.5 text-xl text-yellow-400 placeholder-gray-600 outline-none focus:border-yellow-500/50 transition-all duration-300 tracking-[0.5em] text-center font-bold"
+              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3.5 text-xl text-yellow-400 placeholder-gray-500 outline-none focus:border-yellow-500/50 transition-all duration-300 tracking-[0.5em] text-center font-bold backdrop-blur-md shadow-[inset_0_2px_10px_rgba(0,0,0,0.2)]"
             />
           </motion.div>
         )}
@@ -180,7 +180,7 @@ function StepVerify({ onNext }: { onNext: () => void }) {
         <button
           onClick={handleSendOtp}
           disabled={phone.length < 9 || loading}
-          className="w-full bg-linear-to-r from-yellow-400 to-amber-500 text-black text-sm font-black tracking-widest rounded-xl py-4 hover:scale-[1.02] shadow-[0_4px_15px_rgba(234,179,8,0.3)] disabled:opacity-40 disabled:scale-100 disabled:cursor-not-allowed transition-all duration-300"
+          className="w-full bg-gradient-to-r from-yellow-400 to-amber-500 text-black text-sm font-black tracking-widest rounded-xl py-4 hover:scale-[1.02] shadow-[0_4px_15px_rgba(234,179,8,0.3)] disabled:opacity-40 disabled:scale-100 disabled:cursor-not-allowed transition-all duration-300"
         >
           {loading ? "SENDING…" : "SEND OTP"}
         </button>
@@ -188,7 +188,7 @@ function StepVerify({ onNext }: { onNext: () => void }) {
         <button
           onClick={handleVerify}
           disabled={otp.length < 4}
-          className="w-full bg-linear-to-r from-yellow-400 to-amber-500 text-black text-sm font-black tracking-widest rounded-xl py-4 hover:scale-[1.02] shadow-[0_4px_15px_rgba(234,179,8,0.3)] disabled:opacity-40 disabled:scale-100 transition-all duration-300"
+          className="w-full bg-gradient-to-r from-yellow-400 to-amber-500 text-black text-sm font-black tracking-widest rounded-xl py-4 hover:scale-[1.02] shadow-[0_4px_15px_rgba(234,179,8,0.3)] disabled:opacity-40 disabled:scale-100 transition-all duration-300"
         >
           VERIFY
         </button>
@@ -199,73 +199,40 @@ function StepVerify({ onNext }: { onNext: () => void }) {
 
 // ─── Step 2: Profile ──────────────────────────────────────────────────────────
 function StepProfile({ onNext }: { onNext: () => void }) {
-  const [form, setForm] = useState({ name: "", email: "", nic: "", age: "", address: "" });
+  const [form, setForm] = useState({ name: "", displayName: "" });
 
   const isComplete = Object.values(form).every((val) => val.trim() !== "");
 
   return (
     <div className="space-y-5">
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-        <div className="space-y-1.5">
-          <label className="text-[10px] font-bold tracking-widest text-gray-400 uppercase ml-1">Full Name</label>
-          <input
-            type="text"
-            value={form.name}
-            onChange={(e) => setForm({ ...form, name: e.target.value })}
-            placeholder="shashith perera"
-            className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-gray-200 outline-none focus:border-yellow-500/50 focus:bg-white/10 transition-all"
-          />
-        </div>
-        <div className="space-y-1.5">
-          <label className="text-[10px] font-bold tracking-widest text-gray-400 uppercase ml-1">Email</label>
-          <input
-            type="email"
-            value={form.email}
-            onChange={(e) => setForm({ ...form, email: e.target.value })}
-            placeholder="shashith@gmail.com"
-            className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-gray-200 outline-none focus:border-yellow-500/50 focus:bg-white/10 transition-all"
-          />
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-        <div className="space-y-1.5">
-          <label className="text-[10px] font-bold tracking-widest text-gray-400 uppercase ml-1">NIC Number</label>
-          <input
-            type="text"
-            value={form.nic}
-            onChange={(e) => setForm({ ...form, nic: e.target.value })}
-            placeholder="123456789V"
-            className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-gray-200 outline-none focus:border-yellow-500/50 focus:bg-white/10 transition-all"
-          />
-        </div>
-        <div className="space-y-1.5">
-          <label className="text-[10px] font-bold tracking-widest text-gray-400 uppercase ml-1">Age</label>
-          <input
-            type="number"
-            value={form.age}
-            onChange={(e) => setForm({ ...form, age: e.target.value })}
-            placeholder="18"
-            className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-gray-200 outline-none focus:border-yellow-500/50 focus:bg-white/10 transition-all"
-          />
-        </div>
+      <div className="space-y-1.5">
+        <label className="text-[10px] font-bold tracking-widest text-gray-400 uppercase ml-1">Full Name</label>
+        <input
+          type="text"
+          value={form.name}
+          onChange={(e) => setForm({ ...form, name: e.target.value })}
+          placeholder="shashith perera"
+          className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-gray-200 outline-none focus:border-yellow-500/50 focus:bg-white/10 transition-all backdrop-blur-md placeholder-gray-500"
+        />
       </div>
 
       <div className="space-y-1.5">
-        <label className="text-[10px] font-bold tracking-widest text-gray-400 uppercase ml-1">Home Address</label>
-        <textarea
-          value={form.address}
-          onChange={(e) => setForm({ ...form, address: e.target.value })}
-          placeholder="Enter your full address"
-          rows={2}
-          className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-gray-200 outline-none focus:border-yellow-500/50 focus:bg-white/10 transition-all resize-none"
+        <label className="text-[10px] font-bold tracking-widest text-gray-400 uppercase ml-1 block">
+          Display Name for Character <span className="text-yellow-500/70 normal-case tracking-normal hidden sm:inline">• Shown on your Avatar</span>
+        </label>
+        <input
+          type="text"
+          value={form.displayName}
+          onChange={(e) => setForm({ ...form, displayName: e.target.value })}
+          placeholder="e.g. The Golden Prince"
+          className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-gray-200 outline-none focus:border-yellow-500/50 focus:bg-white/10 transition-all backdrop-blur-md placeholder-gray-500"
         />
       </div>
 
       <button
         onClick={onNext}
         disabled={!isComplete}
-        className="w-full bg-linear-to-r from-yellow-400 to-amber-500 text-black text-sm font-black tracking-widest rounded-xl py-4 hover:scale-[1.02] shadow-[0_4px_15px_rgba(234,179,8,0.3)] disabled:opacity-40 disabled:scale-100 transition-all mt-4 flex justify-center items-center gap-2"
+        className="w-full bg-gradient-to-r from-yellow-400 to-amber-500 text-black text-sm font-black tracking-widest rounded-xl py-4 hover:scale-[1.02] shadow-[0_4px_15px_rgba(234,179,8,0.3)] disabled:opacity-40 disabled:scale-100 transition-all mt-4 flex justify-center items-center gap-2"
       >
         CONTINUE <ChevronRight size={18} strokeWidth={3} />
       </button>
@@ -289,7 +256,7 @@ function StepQuiz({ onNext }: { onNext: () => void }) {
   }
 
   return (
-    <div className="relative min-h-75 flex flex-col">
+    <div className="relative min-h-[300px] flex flex-col">
       {/* Quiz Progress */}
       <div className="flex justify-between items-center mb-6">
         <button
@@ -315,8 +282,8 @@ function StepQuiz({ onNext }: { onNext: () => void }) {
           transition={{ duration: 0.3 }}
           className="flex-1"
         >
-          <h3 className="text-lg sm:text-xl font-bold text-gray-100 text-center mb-1">{currentQ.question}</h3>
-          <p className="text-xs text-yellow-500/70 text-center mb-6">{currentQ.sinhala}</p>
+          <h3 className="text-lg sm:text-xl font-bold text-gray-100 text-center mb-1 drop-shadow-sm">{currentQ.question}</h3>
+          <p className="text-xs text-yellow-400/80 text-center mb-6">{currentQ.sinhala}</p>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {currentQ.options.map((opt) => {
@@ -328,10 +295,10 @@ function StepQuiz({ onNext }: { onNext: () => void }) {
                   className={`flex items-center gap-3 p-4 rounded-xl border text-left transition-all duration-300 ${
                     isSelected
                       ? "border-yellow-400 bg-yellow-400/10 shadow-[0_0_15px_rgba(234,179,8,0.15)]"
-                      : "border-white/10 bg-white/5 hover:bg-white/10 hover:border-white/30"
+                      : "border-white/10 bg-white/5 hover:bg-white/10 hover:border-white/30 backdrop-blur-md"
                   }`}
                 >
-                  <span className="text-2xl">{opt.emoji}</span>
+                  <span className="text-2xl drop-shadow-md">{opt.emoji}</span>
                   <span className={`font-semibold text-sm ${isSelected ? "text-yellow-400" : "text-gray-200"}`}>
                     {opt.label}
                   </span>
@@ -346,7 +313,7 @@ function StepQuiz({ onNext }: { onNext: () => void }) {
         <button
           onClick={onNext}
           disabled={Object.keys(answers).length < QUIZ_QUESTIONS.length}
-          className="w-full bg-linear-to-r from-yellow-400 to-amber-500 text-black text-sm font-black tracking-widest rounded-xl py-4 hover:scale-[1.02] shadow-[0_4px_15px_rgba(234,179,8,0.3)] disabled:opacity-40 disabled:scale-100 transition-all flex justify-center items-center gap-2"
+          className="w-full bg-gradient-to-r from-yellow-400 to-amber-500 text-black text-sm font-black tracking-widest rounded-xl py-4 hover:scale-[1.02] shadow-[0_4px_15px_rgba(234,179,8,0.3)] disabled:opacity-40 disabled:scale-100 transition-all flex justify-center items-center gap-2"
         >
           COMPLETE QUIZ <CheckCircle2 size={18} strokeWidth={3} />
         </button>
@@ -371,29 +338,29 @@ function StepGenerate() {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-85 text-center w-full">
+    <div className="flex flex-col items-center justify-center min-h-[340px] text-center w-full">
       <AnimatePresence mode="wait">
         
         {/* PHASE 1: UPLOAD */}
         {phase === "upload" && (
           <motion.div key="upload" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="w-full">
-            <h3 className="text-xl font-bold text-gray-100 mb-1">Upload your Selfie</h3>
+            <h3 className="text-xl font-bold text-gray-100 mb-1 drop-shadow-sm">Upload your Selfie</h3>
             <p className="text-xs text-gray-400 mb-6">We need a clear, front-facing photo to generate your Avatar.</p>
             
             <button 
               onClick={handleFakeUpload}
-              className={`w-full h-40 border-2 border-dashed rounded-2xl flex flex-col items-center justify-center gap-3 transition-all duration-300 ${
+              className={`w-full h-40 border-2 border-dashed rounded-2xl flex flex-col items-center justify-center gap-3 transition-all duration-300 backdrop-blur-md ${
                 file ? "border-green-500/50 bg-green-500/10" : "border-white/20 bg-white/5 hover:border-yellow-500/50 hover:bg-yellow-500/5"
               }`}
             >
               {file ? (
                 <>
-                  <CheckCircle2 size={40} className="text-green-400" />
+                  <CheckCircle2 size={40} className="text-green-400 drop-shadow-md" />
                   <span className="text-sm font-bold text-green-400">Selfie Ready!</span>
                 </>
               ) : (
                 <>
-                  <Camera size={40} className="text-gray-500" />
+                  <Camera size={40} className="text-gray-400" />
                   <span className="text-sm font-bold text-gray-400 tracking-wide">Tap to Upload Photo</span>
                 </>
               )}
@@ -402,7 +369,7 @@ function StepGenerate() {
             <button
               onClick={handleGenerate}
               disabled={!file}
-              className="w-full mt-6 bg-linear-to-r from-yellow-400 to-amber-500 text-black text-sm font-black tracking-widest rounded-xl py-4 shadow-[0_4px_15px_rgba(234,179,8,0.3)] disabled:opacity-40 transition-all flex justify-center items-center gap-2"
+              className="w-full mt-6 bg-gradient-to-r from-yellow-400 to-amber-500 text-black text-sm font-black tracking-widest rounded-xl py-4 shadow-[0_4px_15px_rgba(234,179,8,0.3)] disabled:opacity-40 transition-all flex justify-center items-center gap-2"
             >
               <Sparkles size={18} strokeWidth={2.5} /> GENERATE AVATAR
             </button>
@@ -417,10 +384,10 @@ function StepGenerate() {
               <div className="absolute inset-0 rounded-full border-[3px] border-t-yellow-400 border-r-transparent border-b-transparent border-l-transparent animate-spin" />
               <div className="absolute inset-4 rounded-full border-[3px] border-amber-500/20" />
               <div className="absolute inset-4 rounded-full border-[3px] border-b-amber-400 border-t-transparent border-r-transparent border-l-transparent animate-spin" style={{ animationDirection: "reverse", animationDuration: "1.5s" }} />
-              <Sparkles size={32} className="text-yellow-400 animate-pulse" />
+              <Sparkles size={32} className="text-yellow-400 animate-pulse drop-shadow-[0_0_15px_rgba(234,179,8,0.8)]" />
             </div>
             <div>
-              <p className="text-lg font-black text-yellow-400 tracking-widest animate-pulse">CRAFTING MAGIC…</p>
+              <p className="text-lg font-black text-yellow-400 tracking-widest animate-pulse drop-shadow-md">CRAFTING MAGIC…</p>
               <p className="text-xs text-gray-400 mt-1 uppercase tracking-[0.2em]">Applying Royal Assets</p>
             </div>
           </motion.div>
@@ -429,12 +396,12 @@ function StepGenerate() {
         {/* PHASE 3: RESULT */}
         {phase === "result" && (
           <motion.div key="res" initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} className="flex flex-col items-center w-full">
-            <p className="text-2xl font-black text-transparent bg-clip-text bg-linear-to-b from-yellow-300 to-yellow-600 drop-shadow-md mb-4">
+            <p className="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-b from-yellow-300 to-yellow-600 drop-shadow-md mb-4">
               AVATAR READY!
             </p>
             
             {/* Stunning Gold Frame for Avatar */}
-            <div className="relative w-56 h-72 p-1 rounded-2xl bg-linear-to-br from-yellow-300 via-amber-600 to-yellow-800 shadow-[0_10px_30px_rgba(234,179,8,0.3)] mb-6">
+            <div className="relative w-56 h-72 p-1 rounded-2xl bg-gradient-to-br from-yellow-300 via-amber-600 to-yellow-800 shadow-[0_10px_30px_rgba(234,179,8,0.3)] mb-6">
               <div className="w-full h-full rounded-xl bg-[#0D0B38] overflow-hidden flex flex-col items-center justify-center relative">
                  <div className="absolute inset-0 bg-[url('https://via.placeholder.com/400x600/1a1a2e/ffffff?text=AI+Avatar')] bg-cover bg-center opacity-80 mix-blend-screen" />
                  {/* Fallback text if image doesn't load visually */}
@@ -443,10 +410,10 @@ function StepGenerate() {
             </div>
 
             <div className="flex gap-3 w-full">
-              <button className="flex-1 bg-linear-to-r from-yellow-400 to-amber-500 text-black text-xs font-black tracking-widest rounded-full py-3.5 hover:scale-105 shadow-[0_4px_15px_rgba(234,179,8,0.3)] transition-all">
+              <button className="flex-1 bg-gradient-to-r from-yellow-400 to-amber-500 text-black text-xs font-black tracking-widest rounded-full py-3.5 hover:scale-105 shadow-[0_4px_15px_rgba(234,179,8,0.3)] transition-all">
                 DOWNLOAD
               </button>
-              <button className="flex-1 border-2 border-yellow-500/50 bg-yellow-500/10 text-yellow-400 text-xs font-black tracking-widest rounded-full py-3.5 hover:bg-yellow-500/20 transition-all">
+              <button className="flex-1 border-2 border-yellow-500/50 bg-yellow-500/10 text-yellow-400 text-xs font-black tracking-widest rounded-full py-3.5 hover:bg-yellow-500/20 transition-all backdrop-blur-sm">
                 SHARE
               </button>
             </div>
@@ -468,21 +435,26 @@ export default function CampaignPage() {
   }
 
   return (
-    <div className="min-h-screen bg-transparent flex flex-col font-sans">
+    <div className="min-h-screen bg-transparent flex flex-col font-sans relative">
+      
+      {/* ─── EXPERT UI: Unified Fixed Mesh Gradient Background ─── */}
+      <div
+        aria-hidden
+        className="pointer-events-none fixed inset-0 -z-10 overflow-hidden bg-[#1E0B4B]" // Deep violet/indigo base
+      >
+        <div className="absolute -top-[20%] -right-[10%] w-[600px] h-[600px] sm:w-[800px] sm:h-[800px] rounded-full bg-[#00E5FF]/35 blur-[120px] sm:blur-[160px]" />
+        <div className="absolute -bottom-[20%] -left-[10%] w-[600px] h-[600px] sm:w-[800px] sm:h-[800px] rounded-full bg-[#00E5FF]/35 blur-[120px] sm:blur-[160px]" />
+        <div className="absolute top-[10%] left-[20%] w-[500px] h-[500px] rounded-full bg-[#9D00FF]/30 blur-[140px]" />
+        <div className="absolute bottom-[20%] right-[20%] w-[500px] h-[500px] rounded-full bg-[#6A00F4]/30 blur-[140px]" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] rounded-full bg-yellow-500/10 blur-[100px]" />
+        <div className="absolute inset-0 opacity-[0.04] mix-blend-overlay pointer-events-none bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" />
+      </div>
+
       <Navbar />
       
-      <div className="flex-1 flex items-center justify-center px-4 py-16 pt-28 relative overflow-hidden">
+      <div className="flex-1 flex items-center justify-center px-4 py-16 pt-28 relative z-10">
         
-        {/* Cinematic Ambient Glow — mirrors HeroSection lighting */}
-        <div aria-hidden className="pointer-events-none fixed inset-0 overflow-hidden -z-10">
-          <div className="absolute -top-[10%] -right-[5%] w-150 h-150 rounded-full bg-[#00E5FF]/12 blur-[150px]" />
-          <div className="absolute -bottom-[10%] -left-[5%] w-150 h-150 rounded-full bg-[#00E5FF]/12 blur-[150px]" />
-          <div className="absolute top-[15%] left-[20%] w-125 h-125 rounded-full bg-[#9D00FF]/10 blur-[140px]" />
-          <div className="absolute bottom-[20%] right-[20%] w-125 h-125 rounded-full bg-[#6A00F4]/10 blur-[140px]" />
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-100 h-100 rounded-full bg-yellow-500/6 blur-[100px]" />
-        </div>
-
-        <div className="relative z-10 w-full max-w-md">
+        <div className="relative w-full max-w-md">
           
           {/* Header Title Area */}
           <motion.div
@@ -491,14 +463,14 @@ export default function CampaignPage() {
             transition={{ duration: 0.6, ease: "easeOut" }}
             className="text-center mb-10"
           >
-            <div className="inline-flex items-center justify-center gap-2 px-4 py-1.5 rounded-full bg-yellow-400/10 border border-yellow-400/30 mb-4">
+            <div className="inline-flex items-center justify-center gap-2 px-4 py-1.5 rounded-full bg-yellow-400/10 border border-yellow-400/30 mb-4 backdrop-blur-md shadow-sm">
               <Sparkles size={14} className="text-yellow-400" />
               <span className="text-[10px] font-bold tracking-[0.25em] text-yellow-400 uppercase">Avurudu Campaign</span>
             </div>
-            <h1 className="text-3xl md:text-4xl font-black tracking-wide text-gray-100 mb-2">
-              REVEAL YOUR <span className="text-transparent bg-clip-text bg-linear-to-r from-yellow-400 to-amber-500 drop-shadow-md">ROYAL</span> SELF
+            <h1 className="text-3xl md:text-4xl font-black tracking-wide text-white mb-2 drop-shadow-lg">
+              REVEAL YOUR <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-amber-500">ROYAL</span> SELF
             </h1>
-            <p className="text-sm text-gray-400 px-4">
+            <p className="text-sm text-gray-300 px-4 font-medium">
               Complete the steps below to generate your legendary AI Avatar and enter the Zellers competition.
             </p>
           </motion.div>
@@ -508,12 +480,12 @@ export default function CampaignPage() {
             <StepIndicator current={step} />
           </motion.div>
 
-          {/* Interactive Form Card */}
+          {/* Interactive Form Card (Frosted Glassmorphism Upgrade) */}
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
-            className="bg-purple-950/30 border border-purple-500/15 shadow-2xl rounded-3xl p-6 md:p-8 backdrop-blur-xl overflow-hidden mt-4"
+            className="bg-white/5 border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] rounded-[2rem] p-6 md:p-8 backdrop-blur-2xl overflow-hidden mt-4"
           >
             <AnimatePresence mode="wait" custom={dir}>
               <motion.div
@@ -534,7 +506,11 @@ export default function CampaignPage() {
 
         </div>
       </div>
-      <Footer />
+      
+      {/* Set footer z-index so it sits correctly on top of fixed background */}
+      <div className="relative z-10">
+         <Footer />
+      </div>
     </div>
   );
 }

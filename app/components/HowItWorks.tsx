@@ -61,15 +61,30 @@ const cardVariants = {
 
 export default function HowItWorks() {
   return (
-    <section className="relative bg-transparent py-24 px-4 overflow-hidden">
-      {/* Background glow */}
+    <section className="relative py-24 px-4 overflow-hidden">
+      
+      {/* ─── EXPERT UI: Unified Hero Mesh Gradient Background ─── */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 overflow-hidden"
+        className="pointer-events-none absolute inset-0 -z-10 overflow-hidden bg-[#1E0B4B]" // Deep violet/indigo base
       >
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-200 h-75 rounded-full bg-[#00E5FF]/8 blur-[120px]" />
-        <div className="absolute top-0 right-0 w-100 h-100 rounded-full bg-[#9D00FF]/8 blur-[130px]" />
-        <div className="absolute bottom-0 left-1/4 w-100 h-75 rounded-full bg-yellow-500/6 blur-[100px]" />
+        {/* Top Right Bright Cyan Glow */}
+        <div className="absolute -top-[20%] -right-[10%] w-[600px] h-[600px] sm:w-[800px] sm:h-[800px] rounded-full bg-[#00E5FF]/35 blur-[120px] sm:blur-[160px]" />
+        
+        {/* Bottom Left Bright Cyan Glow */}
+        <div className="absolute -bottom-[20%] -left-[10%] w-[600px] h-[600px] sm:w-[800px] sm:h-[800px] rounded-full bg-[#00E5FF]/35 blur-[120px] sm:blur-[160px]" />
+        
+        {/* Center/Top-Left Deep Magenta Blend */}
+        <div className="absolute top-[10%] left-[20%] w-[500px] h-[500px] rounded-full bg-[#9D00FF]/30 blur-[140px]" />
+
+        {/* Center/Bottom-Right Deep Purple Blend */}
+        <div className="absolute bottom-[20%] right-[20%] w-[500px] h-[500px] rounded-full bg-[#6A00F4]/30 blur-[140px]" />
+
+        {/* Subtle Central Golden ambient glow */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] rounded-full bg-yellow-500/10 blur-[100px]" />
+
+        {/* Grain overlay for cinematic film feel */}
+        <div className="absolute inset-0 opacity-[0.04] mix-blend-overlay pointer-events-none bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" />
       </div>
 
       {/* Separator line */}
@@ -136,7 +151,7 @@ export default function HowItWorks() {
                 </div>
                 
                 {/* Massive subtle number */}
-                <span className="text-6xl font-black text-white/3 group-hover:text-yellow-500/10 transition-colors duration-500 leading-none select-none tracking-tighter">
+                <span className="text-6xl font-black text-white/5 group-hover:text-yellow-500/10 transition-colors duration-500 leading-none select-none tracking-tighter">
                   {step.step}
                 </span>
               </div>
