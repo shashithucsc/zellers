@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { useRouter } from "next/navigation";
 import { Smartphone, Camera, Star, Sparkles, Trophy } from "lucide-react";
 
 const steps = [
@@ -60,6 +61,7 @@ const cardVariants = {
 };
 
 export default function HowItWorks() {
+  const router = useRouter();
   return (
     <section className="relative py-24 px-4 overflow-hidden">
       
@@ -138,7 +140,8 @@ export default function HowItWorks() {
             <motion.div
               key={step.step}
               variants={cardVariants}
-              className="group relative flex flex-col gap-6 bg-white/3 border border-white/10 rounded-2xl p-6 md:p-8 hover:bg-white/6 hover:border-yellow-500/30 transition-all duration-500 cursor-default overflow-hidden shadow-xl"
+              onClick={() => index === 0 && router.push("/campaign")}
+              className={`group relative flex flex-col gap-6 bg-white/3 border border-white/10 rounded-2xl p-6 md:p-8 hover:bg-white/6 hover:border-yellow-500/30 transition-all duration-500 ${index === 0 ? "cursor-pointer" : "cursor-default"} overflow-hidden shadow-xl`}
             >
               {/* Card glow on hover */}
               <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-linear-to-br from-yellow-500/5 to-transparent pointer-events-none" />

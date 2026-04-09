@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
-import { Search, X, Smartphone, CheckCircle2, ShieldCheck, RefreshCw } from "lucide-react";
+import { Search, X, Smartphone, CheckCircle2, ShieldCheck, RefreshCw, AlertCircle } from "lucide-react";
 import Navbar from "../components/Navbar";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -232,7 +232,7 @@ function PostCard({ post, voted, onVote }: { post: Post; voted: boolean; onVote:
 type VoteModalProps = {
   post: Post | null;
   onClose: () => void;
-  onSuccess: (postId: string) => void;
+  onSuccess: (postId: string, token: string) => void;
 };
 
 function VoteModal({ post, onClose, onSuccess }: VoteModalProps) {
@@ -242,6 +242,7 @@ function VoteModal({ post, onClose, onSuccess }: VoteModalProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [cooldown, setCooldown] = useState(0);
+  const [voteResult, setVoteResult] = useState<"voted" | "already_voted">("voted");
 
   // Reset state whenever a different post is targeted
   useEffect(() => {
@@ -250,6 +251,7 @@ function VoteModal({ post, onClose, onSuccess }: VoteModalProps) {
     setOtp("");
     setError("");
     setCooldown(0);
+    setVoteResult("voted");
   }, [post?.postId]);
 
   useEffect(() => {
@@ -262,18 +264,40 @@ function VoteModal({ post, onClose, onSuccess }: VoteModalProps) {
     if (phone.length < 9) return;
     setError("");
     setLoading(true);
+    const formattedPhone = `+94${phone}`;
     try {
-      const res = await fetch("/api/auth/send-otp", {
+      // Try WhatsApp first; fall back to SMS if the number isn't on WhatsApp
+      const waRes = await fetch("/api/auth/send-whatsapp-otp", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ phone: `+94${phone}` }),
+        body: JSON.stringify({ phone: formattedPhone }),
       });
-      const data = await res.json();
-      if (res.status === 429) {
-        setError(data.message || "Too many requests. Please wait before trying again.");
+      const waData = await waRes.json();
+
+      if (waRes.status === 429) {
+        setError(waData.message || "Too many requests. Please wait before trying again.");
         setCooldown(30);
-      } else if (!res.ok) {
-        setError(data.message || "Failed to send OTP. Please try again.");
+        return;
+      }
+
+      if (waRes.ok) {
+        setPhase("otp");
+        return;
+      }
+
+      // WhatsApp unavailable — fall back to SMS
+      const smsRes = await fetch("/api/auth/send-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ phone: formattedPhone }),
+      });
+      const smsData = await smsRes.json();
+
+      if (smsRes.status === 429) {
+        setError(smsData.message || "Too many requests. Please wait before trying again.");
+        setCooldown(30);
+      } else if (!smsRes.ok) {
+        setError(smsData.message || "Failed to send OTP. Please try again.");
       } else {
         setPhase("otp");
       }
@@ -300,10 +324,28 @@ function VoteModal({ post, onClose, onSuccess }: VoteModalProps) {
       } else if (!res.ok) {
         setError(data.message || "Invalid OTP. Please try again.");
       } else {
-        // TODO: cast vote — POST /votes { postId: post.postId } with Authorization: Bearer data.token
-        // once the vote endpoint is documented and live.
-        setPhase("success");
-        setTimeout(() => { onSuccess(post.postId); onClose(); }, 1800);
+        const token: string = data.token;
+        try {
+          const voteRes = await fetch(`/api/votes/${post.postId}`, {
+            method: "POST",
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          const voteData = await voteRes.json();
+          if (voteRes.status === 409) {
+            // Already voted — acknowledge and mark as voted in UI
+            setVoteResult("already_voted");
+          } else if (!voteRes.ok) {
+            setError(voteData.message || "Failed to cast vote. Please try again.");
+            return;
+          } else {
+            setVoteResult("voted");
+          }
+          setPhase("success");
+          setTimeout(() => { onSuccess(post.postId, token); onClose(); }, 2000);
+        } catch {
+          setError("Network error. Failed to cast vote.");
+          return;
+        }
       }
     } catch {
       setError("Network error. Please check your connection.");
@@ -470,10 +512,23 @@ function VoteModal({ post, onClose, onSuccess }: VoteModalProps) {
                   animate={{ scale: 1 }}
                   transition={{ type: "spring", stiffness: 260, damping: 18, delay: 0.1 }}
                 >
-                  <CheckCircle2 size={56} className="text-yellow-400" strokeWidth={1.5} />
+                  {voteResult === "already_voted" ? (
+                    <AlertCircle size={56} className="text-yellow-400" strokeWidth={1.5} />
+                  ) : (
+                    <CheckCircle2 size={56} className="text-yellow-400" strokeWidth={1.5} />
+                  )}
                 </motion.div>
-                <p className="text-xl font-black text-transparent bg-clip-text bg-linear-to-r from-yellow-300 to-amber-500">Vote Cast!</p>
-                <p className="text-sm text-gray-400">Thanks for voting for <span className="text-yellow-400 font-bold">{post.displayName}</span>!</p>
+                {voteResult === "already_voted" ? (
+                  <>
+                    <p className="text-xl font-black text-transparent bg-clip-text bg-linear-to-r from-yellow-300 to-amber-500">Already Voted!</p>
+                    <p className="text-sm text-gray-400">You&apos;ve already voted for <span className="text-yellow-400 font-bold">{post.displayName}</span>. Your vote still counts!</p>
+                  </>
+                ) : (
+                  <>
+                    <p className="text-xl font-black text-transparent bg-clip-text bg-linear-to-r from-yellow-300 to-amber-500">Vote Cast!</p>
+                    <p className="text-sm text-gray-400">Thanks for voting for <span className="text-yellow-400 font-bold">{post.displayName}</span>!</p>
+                  </>
+                )}
               </motion.div>
             )}
 
@@ -571,13 +626,32 @@ export default function VotePage() {
     fetchPosts(filter, page);
   }, [filter, page, fetchPosts]);
 
+  // Restore previously voted posts from the stored auth token
+  useEffect(() => {
+    const token = typeof window !== "undefined" ? localStorage.getItem("zell_auth_token") : null;
+    if (!token) return;
+    fetch("/api/votes/my-votes", {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.success && Array.isArray(data.votedPostIds)) {
+          setVoted(new Set<string>(data.votedPostIds));
+        }
+      })
+      .catch(() => {}); // silent fail — UI degrades gracefully
+  }, []);
+
   function handleFilterChange(f: Filter) {
     setFilter(f);
     setPage(1);
     setQuery("");
   }
 
-  function handleVoteSuccess(postId: string) {
+  function handleVoteSuccess(postId: string, token: string) {
+    if (typeof window !== "undefined") {
+      localStorage.setItem("zell_auth_token", token);
+    }
     setVoted((prev) => new Set(prev).add(postId));
     // Optimistically bump vote count in local state
     setPosts((prev) =>

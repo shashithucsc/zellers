@@ -7,10 +7,7 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const { phone } = body;
 
-    console.log("[send-whatsapp-otp] Received request for phone:", phone);
-
     if (!phone) {
-      console.warn("[send-whatsapp-otp] Missing phone number in request body.");
       return NextResponse.json(
         { success: false, message: "Phone number is required." },
         { status: 400 }
@@ -18,7 +15,6 @@ export async function POST(req: NextRequest) {
     }
 
     if (!BASE_URL) {
-      console.error("[send-whatsapp-otp] API_KEY environment variable is not set.");
       return NextResponse.json(
         { success: false, message: "Server configuration error." },
         { status: 500 }
@@ -26,7 +22,6 @@ export async function POST(req: NextRequest) {
     }
 
     const url = `${BASE_URL}/auth/send-whatsapp-otp`;
-    console.log("[send-whatsapp-otp] Forwarding request to:", url);
 
     const response = await fetch(url, {
       method: "POST",
@@ -38,13 +33,9 @@ export async function POST(req: NextRequest) {
     });
 
     const contentType = response.headers.get("content-type") ?? "";
-    console.log(
-      `[send-whatsapp-otp] Backend responded with status ${response.status}, content-type: ${contentType}`
-    );
 
     if (!contentType.includes("application/json")) {
-      const text = await response.text();
-      console.error("[send-whatsapp-otp] Non-JSON response body:", text.slice(0, 300));
+      await response.text();
       return NextResponse.json(
         { success: false, message: "Unexpected response from server. Please try again." },
         { status: 502 }
@@ -52,11 +43,9 @@ export async function POST(req: NextRequest) {
     }
 
     const data = await response.json();
-    console.log("[send-whatsapp-otp] Response data:", data);
 
     return NextResponse.json(data, { status: response.status });
-  } catch (error) {
-    console.error("[send-whatsapp-otp] Unexpected error:", error);
+  } catch {
     return NextResponse.json(
       { success: false, message: "Failed to send WhatsApp OTP. Please try again." },
       { status: 500 }
